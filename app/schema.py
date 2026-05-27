@@ -44,9 +44,8 @@ class RecommendationItem(BaseModel):
     title: str
     message: str
     category: str
-    saving_estimate: int
+    saving_estimate: Optional[int] = None
     id: str
-
 
 class PredictionSummary(BaseModel):
     total_pendapatan: int
