@@ -49,7 +49,7 @@ status_level = {
 
 
 app = FastAPI(
-    title="DompetKuy AI API",
+    title="DompetKuyAI",
     version=MODEL_VERSION,
     docs_url=None if IS_PRODUCTION else "/docs",
     redoc_url=None if IS_PRODUCTION else "/redoc",
