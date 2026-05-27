@@ -1,6 +1,6 @@
 import numpy as np
 
-from app.model_loader import model, scaler, feature_cols
+from app.load_model import model, scaler, feature_cols
 
 
 status_map = {

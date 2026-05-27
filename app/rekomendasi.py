@@ -14,8 +14,9 @@ def status_rule(row):
 
 
 def estimasi_hemat(nilai, persen):
+    if not nilai or nilai <= 0:
+        return None
     return int(round(nilai * persen, -3))
-
 
 def add_recommendation_id(recommendations):
     for i, rec in enumerate(recommendations, start=1):
@@ -89,10 +90,8 @@ def rekomendasi_rule(row):
             "title": "Pengeluaran Akhir Pekan Tinggi",
             "message": "Banyak transaksi terjadi saat akhir pekan. Buat anggaran khusus agar pengeluaran lebih terkontrol.",
             "category": "lainnya",
-            "saving_estimate": estimasi_hemat(
-                row["pengeluaran_akhir_pekan"],
-                0.15),
-                "priority": 7
+            "saving_estimate": estimasi_hemat(row["pengeluaran_akhir_pekan"],0.15),
+            "priority": 7
         })
 
     if len(hasil) == 0:

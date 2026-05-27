@@ -34,13 +34,25 @@ valid_pay_methods = [
     "ovo",
     "dana",
     "shopeepay",
-    "jenius",
     "cc_visa",
     "cc_mastercard",
     "cc_jcb",
     "cc_amex",
     "lainnya"
 ]
+
+_gemini_client = None
+
+
+def get_gemini_client():
+    global _gemini_client
+
+    if _gemini_client is None:
+        api_key = os.getenv("GEMINI_API_KEY")
+        if api_key:
+            _gemini_client = genai.Client(api_key=api_key)
+
+    return _gemini_client
 
 
 def normalize_amount(value):
@@ -53,13 +65,13 @@ def normalize_amount(value):
     text = str(value).lower().strip()
     text = text.replace("rp", "").strip()
 
-    juta_match = re.search(r"(\d+(?:[,.]\d+)?)\s*(jt|juta)", text)
-    if juta_match:
-        angka = juta_match.group(1).replace(",", ".")
+    jutaan = re.search(r"(\d+(?:[,.]\d+)?)\s*(jt|juta)", text)
+    if jutaan:
+        angka = jutaan.group(1).replace(",", ".")
         return int(float(angka) * 1000000)
 
-    ribu_match = re.search(r"(\d+(?:[,.]\d+)?)\s*(rb|ribu|k)", text)
-    if ribu_match:
+    ribuuan = re.search(r"(\d+(?:[,.]\d+)?)\s*(rb|ribu|k)", text)
+    if ribuuan:
         angka = ribu_match.group(1).replace(",", ".")
         return int(float(angka) * 1000)
 
@@ -164,14 +176,13 @@ def fallback_extract(text):
         "type": transaction_type,
         "confidence": 0.5
     }
-    
-def extract_multiple_transactions(text):
-    api_key = os.getenv("GEMINI_API_KEY")
 
-    if not api_key:
+
+def multi_transactions(text):
+    client = get_gemini_client()
+
+    if not client:
         return [fallback_extract(text)]
-
-    client = genai.Client(api_key=api_key)
 
     prompt = f"""
 Ekstrak semua transaksi dari teks berikut menjadi JSON array.
@@ -204,8 +215,7 @@ Aturan:
 
     try:
         raw_text = response.text.strip()
-        raw_text = raw_text.replace("```json", "")
-        raw_text = raw_text.replace("```", "").strip()
+        raw_text = re.sub(r"```(?:json)?", "", raw_text).strip()
 
         result = json.loads(raw_text)
 

@@ -1,13 +1,18 @@
 import joblib
 import tensorflow as tf
 from tensorflow.keras import layers
+from tensorflow.keras.utils import register_keras_serializable
 
-
+@register_keras_serializable(package="Custom")
 class FinancialLayer(layers.Layer):
     def __init__(self, units=32, **kwargs):
         super().__init__(**kwargs)
         self.units = units
-        self.dense = layers.Dense(units, activation="relu")
+
+    def build(self, input_shape):
+        self.dense = layers.Dense(self.units, activation="relu")
+        self.dense.build(input_shape)
+        super().build(input_shape)
 
     def call(self, inputs):
         return self.dense(inputs)
@@ -17,9 +22,8 @@ class FinancialLayer(layers.Layer):
         config.update({"units": self.units})
         return config
 
-
 model = tf.keras.models.load_model(
-    "models/dompetkuy_financial_status.keras",
+    "models/dompetkuy_model.keras",
     custom_objects={"FinancialLayer": FinancialLayer},
     compile=False
 )
