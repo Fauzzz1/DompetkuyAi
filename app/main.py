@@ -9,7 +9,7 @@ from app.schemas import (
 )
 from app.preprocessing import preprocessing
 from app.feature_engineering import feature_engineering
-from app.recommendation_engine import status_rule, rekomendasi_rule
+from app.recommendation import status_rule, rekomendasi_rule
 from app.inference import predict_model
 from app.monitoring import save_prediction_log
 from app.nlp_extractor import extract_multiple_transactions
