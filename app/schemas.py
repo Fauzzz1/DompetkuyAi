@@ -1,5 +1,5 @@
-from pydantic import BaseModel
 from typing import List, Optional
+from pydantic import BaseModel
 
 
 class Transaction(BaseModel):
@@ -16,6 +16,56 @@ class Transaction(BaseModel):
 
 class UserTransactionRequest(BaseModel):
     transactions: List[Transaction]
-    
+
+
 class ExtractTransactionsRequest(BaseModel):
     text: str
+
+
+class ExtractedTransaction(BaseModel):
+    amount: int
+    category: str
+    merchant: str
+    pay_method: str
+    note: str
+    type: str
+    confidence: float
+
+
+class ExtractTransactionsResponse(BaseModel):
+    timestamp: str
+    transaction_count: int
+    transactions: List[ExtractedTransaction]
+
+
+class RecommendationItem(BaseModel):
+    type: str
+    icon: str
+    title: str
+    message: str
+    category: str
+    saving_estimate: int
+    id: str
+
+
+class PredictionSummary(BaseModel):
+    total_pendapatan: int
+    total_pengeluaran: int
+    selisih: int
+    rasio_pengeluaran_pendapatan: float
+    jumlah_transaksi: int
+
+
+class PredictResponse(BaseModel):
+    user_id: str
+    profil_user: str
+    lokasi: str
+    financial_status: str
+    rule_status: str
+    model_status: Optional[str] = None
+    recommendation_method: str
+    model_confidence: Optional[float] = None
+    model_version: str
+    timestamp: str
+    summary: PredictionSummary
+    recommendations: List[RecommendationItem]

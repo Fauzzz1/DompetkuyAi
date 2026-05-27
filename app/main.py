@@ -8,7 +8,12 @@ from fastapi.exceptions import RequestValidationError
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
 
-from app.schemas import UserTransactionRequest, ExtractTransactionsRequest
+from app.schemas import (
+    UserTransactionRequest,
+    ExtractTransactionsRequest,
+    ExtractTransactionsResponse,
+    PredictResponse,
+)
 from app.preprocessing import preprocessing
 from app.feature_engineering import feature_engineering
 from app.rekomendasi import status_rule, rekomendasi_rule
@@ -128,7 +133,7 @@ def health():
         "timestamp": now_iso(),
     }
 
-@app.post("/extract-transactions")
+@app.post("/extract-transactions", response_model=ExtractTransactionsResponse)
 def extract_transactions(request: ExtractTransactionsRequest):
     try:
         text = request.text.strip()
@@ -162,8 +167,7 @@ def extract_transactions(request: ExtractTransactionsRequest):
             status_code=500,
             detail="Gagal memproses teks transaksi",
         )
-        
-@app.post("/predict")
+@app.post("/predict", response_model=PredictResponse)
 def predict(request: UserTransactionRequest):
     try:
         data = [item.model_dump() for item in request.transactions]
