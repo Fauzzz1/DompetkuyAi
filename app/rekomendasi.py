@@ -18,6 +18,7 @@ def estimasi_hemat(nilai, persen):
         return None
     return int(round(nilai * persen, -3))
 
+
 def add_recommendation_id(recommendations):
     for i, rec in enumerate(recommendations, start=1):
         rec["id"] = f"rec-{i:03d}"
@@ -28,70 +29,145 @@ def add_recommendation_id(recommendations):
 def rekomendasi_rule(row):
     hasil = []
 
-    if row["rasio_pengeluaran_pendapatan"] > 1:
+    total_pendapatan = row["total_pendapatan"]
+    total_pengeluaran = row["total_pengeluaran"]
+    selisih = row["selisih"]
+    rasio = row["rasio_pengeluaran_pendapatan"]
+
+    if rasio > 1:
         hasil.append({
             "type": "alert",
             "icon": "🚨",
             "title": "Pengeluaran Melebihi Pendapatan",
-            "message": "Pengeluaran kamu lebih besar dari pendapatan. Prioritaskan kebutuhan utama dulu.",
+            "message": (
+                f"Total pengeluaran kamu sudah mencapai "
+                f"{rasio * 100:.1f}% dari pendapatan bulanan. "
+                f"Coba prioritaskan kebutuhan utama dan kurangi pengeluaran tidak penting."
+            ),
             "category": "lainnya",
-            "saving_estimate": estimasi_hemat(row["total_pengeluaran"], 0.10),
+            "saving_estimate": estimasi_hemat(total_pengeluaran, 0.10),
             "priority": 1
         })
 
-    elif row["rasio_pengeluaran_pendapatan"] > 0.85:
+    elif rasio > 0.85:
         hasil.append({
             "type": "warning",
             "icon": "⚠️",
             "title": "Rasio Pengeluaran Tinggi",
-            "message": "Pengeluaran sudah cukup dekat dengan pendapatan. Coba kurangi transaksi tidak penting.",
+            "message": (
+                f"Pengeluaran kamu sudah mencapai "
+                f"{rasio * 100:.1f}% dari pendapatan bulanan. "
+                f"Coba kurangi transaksi yang tidak terlalu penting."
+            ),
             "category": "lainnya",
-            "saving_estimate": estimasi_hemat(row["total_pengeluaran"], 0.08),
+            "saving_estimate": estimasi_hemat(total_pengeluaran, 0.08),
             "priority": 2
         })
 
-    if row["rasio_makanan"] > 0.35 and row["total_makanan"] >= 500000:
+    elif rasio > 0.70:
+        hasil.append({
+            "type": "tip",
+            "icon": "💡",
+            "title": "Pengeluaran Mulai Perlu Dipantau",
+            "message": (
+                f"Rasio pengeluaran saat ini sekitar "
+                f"{rasio * 100:.1f}% dari pendapatan. "
+                f"Masih cukup aman, tapi sebaiknya mulai lebih terkontrol."
+                ),
+            "category": "lainnya",
+            "saving_estimate": estimasi_hemat(total_pengeluaran, 0.05),
+            "priority": 5
+        })
+
+    if total_pendapatan > 0 and selisih < total_pendapatan * 0.10:
         hasil.append({
             "type": "warning",
+            "icon": "💰",
+            "title": "Sisa Saldo Bulanan Terlalu Kecil",
+            "message": (
+                f"Sisa saldo bulan ini hanya sekitar "
+                f"Rp{int(selisih):,}".replace(",", ".")+ ". Sebaiknya mulai sisihkan dana darurat atau tabungan rutin."
+            ),
+            "category": "tabungan",
+            "saving_estimate": estimasi_hemat(total_pendapatan, 0.10),
+            "priority": 2
+        })
+
+    if row["rasio_makanan"] > 0.20 and row["total_makanan"] >= 300000:
+        hasil.append({
+            "type": "tip",
             "icon": "🍽️",
-            "title": "Pengeluaran Makanan Tinggi",
-            "message": "Porsi pengeluaran makanan cukup besar. Coba buat batas budget makan harian.",
+            "title": "Pengeluaran Makanan Perlu Dikontrol",
+            "message": (
+                f"Pengeluaran makanan mencapai sekitar "
+                f"{row['rasio_makanan'] * 100:.1f}% "
+                f"dari total pengeluaran dengan total "
+                f"Rp{int(row['total_makanan']):,}".replace(",", ".")
+                + ". Pertimbangkan membuat budget makan harian."
+            ),
             "category": "makanan",
             "saving_estimate": estimasi_hemat(row["total_makanan"], 0.15),
             "priority": 3
         })
 
-    if row["rasio_hiburan"] > 0.25 and row["total_hiburan"] >= 500000:
+    if row["rasio_transportasi"] > 0.15 and row["total_transportasi"] >= 300000:
         hasil.append({
-            "type": "alert",
-            "icon": "🎮",
-            "title": "Pengeluaran Hiburan Tinggi",
-            "message": "Pengeluaran hiburan cukup dominan. Kurangi transaksi hiburan yang impulsif.",
-            "category": "hiburan",
-            "saving_estimate": estimasi_hemat(row["total_hiburan"], 0.20),
-            "priority": 2
+            "type": "tip",
+            "icon": "🚗",
+            "title": "Biaya Transportasi Cukup Tinggi",
+            "message": (
+                f"Biaya transportasi bulan ini sekitar "
+                f"Rp{int(row['total_transportasi']):,}".replace(",", ".")+ ". Pertimbangkan alternatif transportasi yang lebih hemat."
+            ),
+            "category": "transportasi",
+            "saving_estimate": estimasi_hemat(row["total_transportasi"], 0.15),
+            "priority": 4
         })
 
-    if row["rasio_belanja"] > 0.30 and row["total_belanja"] >= 500000:
+    if row["rasio_hiburan"] > 0.15 and row["total_hiburan"] >= 300000:
+        hasil.append({
+            "type": "warning",
+            "icon": "🎮",
+            "title": "Pengeluaran Hiburan Tinggi",
+           "message": (f"Pengeluaran hiburan bulan ini sekitar "
+            f"Rp{int(row['total_hiburan']):,}".replace(",", ".")+ ". Pertimbangkan membatasi transaksi hiburan impulsif."
+            ),
+            "category": "hiburan",
+            "saving_estimate": estimasi_hemat(row["total_hiburan"], 0.20),
+            "priority": 3
+        })
+
+    if row["rasio_belanja"] > 0.18 and row["total_belanja"] >= 300000:
         hasil.append({
             "type": "tip",
             "icon": "🛒",
             "title": "Belanja Bisa Lebih Dikontrol",
-            "message": "Pengeluaran belanja cukup besar. Buat daftar kebutuhan sebelum belanja.",
+            "message": (
+                f"Total pengeluaran belanja mencapai "
+                f"Rp{int(row['total_belanja']):,}".replace(",", ".") + ". Coba buat daftar kebutuhan sebelum berbelanja agar lebih hemat."
+            ),
             "category": "belanja",
             "saving_estimate": estimasi_hemat(row["total_belanja"], 0.15),
             "priority": 4
         })
 
-    if (row["rasio_akhir_pekan"] > 0.45 and row["pengeluaran_akhir_pekan"] >= 750000 and row["rasio_pengeluaran_pendapatan"] > 0.60 ):
+    if (
+        row["rasio_akhir_pekan"] > 0.35
+        and row["pengeluaran_akhir_pekan"] >= 500000
+        and rasio > 0.60
+    ):
         hasil.append({
             "type": "tip",
             "icon": "📅",
             "title": "Pengeluaran Akhir Pekan Tinggi",
-            "message": "Banyak transaksi terjadi saat akhir pekan. Buat anggaran khusus agar pengeluaran lebih terkontrol.",
+            "message": (
+                f"Sebagian besar pengeluaran terjadi saat akhir pekan "
+                f"dengan total sekitar "
+                f"Rp{int(row['pengeluaran_akhir_pekan']):,}".replace(",", ".")+ ". Buat batas pengeluaran khusus weekend agar lebih terkontrol."
+            ),
             "category": "lainnya",
-            "saving_estimate": estimasi_hemat(row["pengeluaran_akhir_pekan"],0.15),
-            "priority": 7
+            "saving_estimate": estimasi_hemat(row["pengeluaran_akhir_pekan"], 0.15),
+            "priority": 6
         })
 
     if len(hasil) == 0:
@@ -99,13 +175,13 @@ def rekomendasi_rule(row):
             "type": "good",
             "icon": "✅",
             "title": "Keuangan Cukup Stabil",
-            "message": "Pola keuangan kamu cukup baik. Pertahankan dan mulai sisihkan tabungan rutin.",
+            "message": "Pola keuangan kamu cukup baik. Pertahankan kebiasaan ini dan mulai sisihkan tabungan rutin.",
             "category": "general",
             "saving_estimate": None,
             "priority": 9
         })
 
-    hasil = sorted(hasil, key=lambda x: x["priority"])[:3]
+    hasil = sorted(hasil, key=lambda x: x["priority"])[:5]
 
     for rec in hasil:
         rec.pop("priority", None)
