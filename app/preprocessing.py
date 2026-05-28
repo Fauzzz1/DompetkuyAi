@@ -26,14 +26,12 @@ def preprocessing(data):
         "expense": "pengeluaran"
     }
     df["jenis"] = df["jenis"].map(jenis_map).fillna(df["jenis"])
-
     df = df.dropna(subset=required_cols)
     df = df[df["jumlah"] > 0]
 
     if df.empty:
         raise ValueError("Data transaksi tidak valid.")
-
+        
     df["hari_dalam_minggu"] = df["tanggal"].dt.dayofweek
     df["akhir_pekan"] = df["hari_dalam_minggu"].isin([5, 6]).astype(int)
-
     return df

@@ -24,7 +24,7 @@ from app.logger import logger
 
 
 load_dotenv()
-
+# Entry point API DompetKuy — routing, middleware, dan logika prediksi keuangan
 ENV = os.getenv("ENV", "development").lower()
 IS_PRODUCTION = ENV == "production"
 
@@ -103,7 +103,7 @@ def sanitize_text(text: str) -> str:
         text,
     )
     return clean_text[:MAX_TEXT_LENGTH]
-
+# Ambil status paling parah antara rule dan model
 def get_final_status(rule_status: str, model_status: str) -> str:
     rule_score = status_level.get(rule_status)
     model_score = status_level.get(model_status)
@@ -147,7 +147,7 @@ def extract_transactions(request: ExtractTransactionsRequest):
             )
 
         clean_text = sanitize_text(text)
-        results = extract_multiple_transactions(clean_text)
+        results = multi_transactions(clean_text)
 
         logger.info(f"Extraction success | count={len(results)}")
 

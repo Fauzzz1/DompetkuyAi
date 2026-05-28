@@ -7,7 +7,7 @@ from dotenv import load_dotenv
 from google import genai
 
 load_dotenv()
-
+# Ekstraksi transaksi dari teks bebas menggunakan Gemini AI dengan fallback rule-based
 valid_categories = [
     "makanan",
     "transport",
@@ -42,8 +42,6 @@ valid_pay_methods = [
 ]
 
 _gemini_client = None
-
-
 def get_gemini_client():
     global _gemini_client
 
@@ -54,11 +52,9 @@ def get_gemini_client():
 
     return _gemini_client
 
-
 def normalize_amount(value):
     if value is None:
         return 0
-
     if isinstance(value, (int, float)):
         return int(value)
 
@@ -80,13 +76,11 @@ def normalize_amount(value):
 
     if not match:
         return 0
-
     return int(match.group())
 
 
 def normalize_category(value):
     value = (value or "lainnya").lower().strip()
-
     category_map = {
         "transportasi": "transport",
         "transport": "transport",
@@ -105,7 +99,6 @@ def normalize_category(value):
         return "lainnya"
 
     return value
-
 
 def normalize_pay_method(value):
     value = (value or "lainnya").lower().strip()
@@ -128,7 +121,6 @@ def normalize_pay_method(value):
 
     return value
 
-
 def normalize_type(value, category):
     value = (value or "").lower().strip()
 
@@ -139,7 +131,6 @@ def normalize_type(value, category):
         return "income"
 
     return "expense"
-
 
 def fallback_extract(text):
     lower_text = text.lower()
@@ -177,7 +168,6 @@ def fallback_extract(text):
         "confidence": 0.5
     }
 
-
 def multi_transactions(text):
     client = get_gemini_client()
 
@@ -212,16 +202,13 @@ Aturan:
             if attempt == 2:
                 return [fallback_extract(text)]
             time.sleep(1.5)
-
     try:
         raw_text = response.text.strip()
         raw_text = re.sub(r"```(?:json)?", "", raw_text).strip()
-
         result = json.loads(raw_text)
 
         if isinstance(result, dict):
             result = [result]
-
         if not isinstance(result, list):
             return [fallback_extract(text)]
 
@@ -235,7 +222,6 @@ Aturan:
             continue
 
         category = normalize_category(item.get("category"))
-
         confidence = item.get("confidence", 0.8)
 
         try:
@@ -244,7 +230,6 @@ Aturan:
             confidence = 0.8
 
         confidence = max(0.0, min(confidence, 0.95))
-
         transactions.append({
             "amount": normalize_amount(item.get("amount")),
             "category": category,
@@ -257,5 +242,4 @@ Aturan:
 
     if not transactions:
         return [fallback_extract(text)]
-
     return transactions
