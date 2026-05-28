@@ -60,6 +60,7 @@ def normalize_amount(value):
 
     text = str(value).lower().strip()
     text = text.replace("rp", "").strip()
+    text = text.replace(" ", "")
 
     jutaan = re.search(r"(\d+(?:[,.]\d+)?)\s*(jt|juta)", text)
     if jutaan:
@@ -182,10 +183,13 @@ Teks:
 
 Aturan:
 - Balas JSON array saja tanpa markdown.
+- Pisahkan setiap transaksi berdasarkan kata seperti: lalu, terus, kemudian, dan.
+- Jika ada 2 aktivitas berbeda, buat 2 item transaksi.
 - Setiap item wajib punya amount, category, merchant, pay_method, type, confidence.
 - amount harus integer rupiah.
 - category harus salah satu: makanan, transport, belanja, hiburan, kesehatan, pendidikan, tagihan, pemasukan, lainnya.
-- pay_method harus salah satu: cash, bni, bca, mandiri, bri, bsi, cimb, danamon, permata, gopay, ovo, dana, shopeepay, jenius, cc_visa, cc_mastercard, cc_jcb, cc_amex, lainnya.
+- pay_method harus salah satu: cash, bni, bca, mandiri, bri, bsi, cimb, danamon, permata, gopay, ovo, dana, shopeepay,cc_visa, cc_mastercard, cc_jcb, cc_amex, lainnya.
+- merchant harus singkat dan jelas.
 - type harus expense atau income.
 """
 
