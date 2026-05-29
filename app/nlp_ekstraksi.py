@@ -69,7 +69,7 @@ def normalize_amount(value):
 
     ribuuan = re.search(r"(\d+(?:[,.]\d+)?)\s*(rb|ribu|k)", text)
     if ribuuan:
-        angka = ribu_match.group(1).replace(",", ".")
+        angka = ribuaan.group(1).replace(",", ".")
         return int(float(angka) * 1000)
 
     cleaned = text.replace(".", "").replace(",", "")
