@@ -1,101 +1,51 @@
-# 💸 DompetKuy AI Service
+# DompetKuy AI Service
 
-API berbasis Deep Learning dan Recommendation System untuk analisis kondisi keuangan pengguna berdasarkan histori transaksi.
+Service AI untuk analisis kondisi keuangan pengguna berdasarkan histori transaksi. Sistem menggunakan kombinasi Deep Learning, Recommendation System, dan NLP untuk menghasilkan insight finansial secara otomatis.
 
 ---
 
-# 🚀 Features
+## Fitur
 
-### Financial Status Prediction (`POST /predict`)
+### Prediksi Kondisi Finansial
 
-Memprediksi kondisi finansial pengguna menjadi:
+Endpoint:
+
+```text
+POST /predict
+```
+
+Digunakan untuk memprediksi kondisi finansial pengguna menjadi:
 
 * good
 * tip
 * warning
 * alert
 
-### NLP Transaction Extraction (`POST /extract-transactions`)
-
-Mengubah transaksi natural language menjadi data transaksi terstruktur.
+Sistem juga menghasilkan rekomendasi finansial berdasarkan pola transaksi pengguna.
 
 ---
 
-# 🌐 Production URL
+### Ekstraksi Transaksi Otomatis
+
+Endpoint:
 
 ```text
-https://dompetkuyai-production.up.railway.app
+POST /extract-transactions
 ```
 
----
+Mengubah teks transaksi menjadi data transaksi terstruktur secara otomatis.
 
-# 📘 API Documentation
+Contoh:
 
 ```text
-https://dompetkuyai-production.up.railway.app/docs
+beli kopi 25rb pakai gopay di Kopi Kenangan
 ```
 
----
-
-# 📌 Model & Endpoints
-
-## 💰 Financial Condition Classification (`POST /predict`)
-
-Memprediksi kondisi keuangan pengguna berdasarkan histori transaksi.
-
-### Jenis Model
-
-Switching Hybrid Recommendation:
-
-* Rule-Based Recommendation
-* Hybrid Deep Learning Recommendation
-
-### Model
-
-Deep Neural Network berbasis TensorFlow/Keras.
-
-### Input
-
-Histori transaksi pengguna:
-
-* pendapatan
-* pengeluaran
-* kategori transaksi
-* metode pembayaran
-* merchant
-* lokasi
-* profil pengguna
-
-### Output
-
-Prediksi kondisi finansial:
-
-* good
-* tip
-* warning
-* alert
-
-Serta insight rekomendasi finansial.
-
----
-
-## 📝 NLP Transaction Extraction (`POST /extract-transactions`)
-
-Mengubah teks transaksi menjadi data transaksi terstruktur.
-
-### Contoh Input
-
-```json
-{
-  "text": "beli kopi 25rb pakai gopay di Kopi Kenangan"
-}
-```
-
-### Output
+akan diproses menjadi:
 
 ```json
 [
-   {
+    {
       "amount": 25000,
       "category": "makanan",
       "merchant": "Kopi Kenangan",
@@ -109,18 +59,94 @@ Mengubah teks transaksi menjadi data transaksi terstruktur.
 
 ---
 
-# ⚙️ Installation
+## Pendekatan Model
+
+Sistem menggunakan pendekatan:
+
+* Rule-Based Recommendation
+* Deep Learning Recommendation
+* Switching Hybrid Recommendation
+
+Model utama dibangun menggunakan TensorFlow/Keras.
+
+---
+
+## Struktur Project
+
+```bash
+dompetkuy-ai/
+├── app/
+│   ├── main.py
+│   ├── preprocessing.py
+│   ├── feature_engineering.py
+│   ├── inference.py
+│   ├── rekomendasi.py
+│   ├── nlp_ekstraksi.py
+│   └── schema.py
+│
+├── models/
+│   ├── dompetkuy_model.keras
+│   ├── scaler.pkl
+│   ├── feature_cols.pkl
+│   └── metrics.json
+│
+├── Dockerfile
+├── requirements.txt
+└── README.md
+```
+
+---
+
+## Instalasi
+
+Clone repository:
 
 ```bash
 git clone https://github.com/Fauzzz1/DompetkuyAi.git
 cd DompetkuyAi
+```
+
+Install dependency:
+
+```bash
 pip install -r requirements.txt
 ```
 
 ---
 
-# ▶️ Run Local
+## Menjalankan API
 
 ```bash
 uvicorn app.main:app --reload
 ```
+
+API akan berjalan di:
+
+```text
+http://127.0.0.1:8000
+```
+
+Swagger documentation:
+
+```text
+http://127.0.0.1:8000/docs
+```
+
+---
+
+## Production URL
+
+```text
+https://dompetkuyai-production.up.railway.app
+```
+
+---
+
+## Deployment
+
+Project dideploy menggunakan:
+
+* Railway
+* Docker
+* FastAPI
+* TensorFlow/Keras
