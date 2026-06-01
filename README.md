@@ -74,15 +74,21 @@ Model utama dibangun menggunakan TensorFlow/Keras.
 ## Struktur Project
 
 ```bash
-dompetkuy-ai/
+
+DompetkuAi/
 ├── app/
-│   ├── main.py
-│   ├── preprocessing.py
+│   ├── __init__.py
 │   ├── feature_engineering.py
 │   ├── inference.py
-│   ├── rekomendasi.py
+│   ├── load_model.py
+│   ├── logger.py
+│   ├── main.py
+│   ├── monitoring.py
 │   ├── nlp_ekstraksi.py
-│   └── schema.py
+│   ├── preprocessing.py
+│   ├── rekomendasi.py
+│   ├── schema.py
+│   └── utils.py
 │
 ├── models/
 │   ├── dompetkuy_model.keras
@@ -90,12 +96,15 @@ dompetkuy-ai/
 │   ├── feature_cols.pkl
 │   └── metrics.json
 │
+├── .dockerignore
+├── .gitignore
+├── .python-version
 ├── Dockerfile
+├── Procfile
+├── README.md
 ├── requirements.txt
-└── README.md
+└── runtime.txt
 ```
-
----
 
 ## Instalasi
 
