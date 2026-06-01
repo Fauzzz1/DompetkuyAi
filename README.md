@@ -87,7 +87,7 @@ Mengubah teks transaksi menjadi data transaksi terstruktur.
 
 ```json
 {
-  "text": "beli kopi 20 ribu lalu bayar gojek 15 ribu"
+  "text": "beli kopi 25rb pakai gopay di Kopi Kenangan"
 }
 ```
 
@@ -95,14 +95,15 @@ Mengubah teks transaksi menjadi data transaksi terstruktur.
 
 ```json
 [
-  {
-    "category": "makanan",
-    "amount": 20000
-  },
-  {
-    "category": "transportasi",
-    "amount": 15000
-  }
+   {
+      "amount": 25000,
+      "category": "makanan",
+      "merchant": "Kopi Kenangan",
+      "pay_method": "gopay",
+      "note": "beli kopi 25rb pakai gopay di Kopi Kenangan",
+      "type": "expense",
+      "confidence": 0.95
+    }
 ]
 ```
 
