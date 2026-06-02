@@ -3,7 +3,8 @@ __pycache__/
 *.pyc
 .vscode/
 .env
-logs/
+app.log
+logs/prediction_logs.jsonl
 app.log
 notebooks/
 outputs/
