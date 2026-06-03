@@ -1,7 +1,7 @@
 #Rule menentukan hasil rekomendasi berdasarkan pola pengeluaran
 def status_rule(row):
     rasio = row["rasio_pengeluaran_pendapatan"]
-    if row["total_pendapatan"] == 0:
+    if row["total_pendapatan"] == 0 and row["total_pengeluaran"] > 0:
         return "alert"
     if rasio <= 0.60:
         return "good"
@@ -31,7 +31,23 @@ def rekomendasi_rule(row):
     total_pengeluaran = row["total_pengeluaran"]
     selisih = row["selisih"]
     rasio = row["rasio_pengeluaran_pendapatan"]
-    if rasio > 1:
+    if total_pendapatan == 0 and total_pengeluaran > 0:
+        hasil.append ({
+            "type": "alert",
+            "icon": "🚨",
+            "title": "Pengeluaran Melebihi Pendapatan",
+            "message": (
+                f"Kamu memiliki pengeluaran sebesar "
+                f"{format_rupiah(total_pengeluaran)} "
+                f"tapi belum ada pendapatan yang tercatat. "
+                f"Tambahkan data pendapatan agar analisis lebih akurat."
+            ),
+            "category": "lainnya",
+            "saving_estimate": estimasi_hemat(total_pengeluaran, 0.10),
+            "priority": 1
+        })
+        
+    elif rasio > 1:
         hasil.append({
             "type": "alert",
             "icon": "🚨",
@@ -76,7 +92,7 @@ def rekomendasi_rule(row):
             "priority": 5
         })
 
-    else:
+    elif total_pendapatan > 0:
         hasil.append({
             "type": "good",
             "icon": "✅",
@@ -140,7 +156,7 @@ def rekomendasi_rule(row):
         hasil.append({
             "type": "warning",
             "icon": "🍽️",
-            "title": "Pengeluaran Makanan Meningkat",
+            "title": "Pengeluaran Makanan Cukup Tinggi",
             "message": (
                 f"Pengeluaran makanan mencapai "
                 f"{format_rupiah(row['total_makanan'])} "
