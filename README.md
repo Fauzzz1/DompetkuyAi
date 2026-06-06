@@ -71,7 +71,7 @@ Model utama dibangun menggunakan TensorFlow/Keras.
 
 ---
 
-## model&notbook
+## model&notbooks
 
 ```text
 https://drive.google.com/drive/folders/1K94L2IaXAaFI64RaiayluvfGdhd7Z4zL?usp=drive_link
