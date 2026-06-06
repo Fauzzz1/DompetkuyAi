@@ -71,11 +71,19 @@ Model utama dibangun menggunakan TensorFlow/Keras.
 
 ---
 
+## model&notbook
+
+```text
+https://drive.google.com/drive/folders/1K94L2IaXAaFI64RaiayluvfGdhd7Z4zL?usp=drive_link
+
+```
+
 ## Struktur Project
 
 ```bash
 
-DompetkuAi/
+```text
+DompetkuyAi/
 ├── app/
 │   ├── __init__.py
 │   ├── feature_engineering.py
@@ -96,6 +104,12 @@ DompetkuAi/
 │   ├── feature_cols.pkl
 │   └── metrics.json
 │
+├── notebooks/
+│   └── capstone_final_projek.ipynb
+│
+├── logs/
+│   └── fit/
+│
 ├── .dockerignore
 ├── .gitignore
 ├── .python-version
@@ -104,6 +118,8 @@ DompetkuAi/
 ├── README.md
 ├── requirements.txt
 └── runtime.txt
+
+
 ```
 
 ## Instalasi
