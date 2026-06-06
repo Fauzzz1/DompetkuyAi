@@ -104,9 +104,6 @@ DompetkuyAi/
 │   ├── feature_cols.pkl
 │   └── metrics.json
 │
-├── notebooks/
-│   └── capstone_final_projek.ipynb
-│
 ├── logs/
 │   └── fit/
 │
