@@ -1,4 +1,5 @@
-# DompetKuy AI Service
+# CAPSTONE 2026
+## DompetKuy AI Service
 
 Service AI untuk analisis kondisi keuangan pengguna berdasarkan histori transaksi. Sistem menggunakan kombinasi Deep Learning, Recommendation System, dan NLP untuk menghasilkan insight finansial secara otomatis.
 
